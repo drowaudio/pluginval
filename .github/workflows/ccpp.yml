@@ -13,4 +13,6 @@ jobs:
         submodules: true
     - name: build
       run: install/mac_build
+    - name: test
+      run: install/mac_tests
 
