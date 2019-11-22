@@ -11,8 +11,12 @@ jobs:
     - uses: actions/checkout@v1
       with:
         submodules: true
-    - name: build
-      run: install/mac_build
-    - name: test
-      run: tests/mac_tests
+    - name: install certificates
+      run: |
+        install/mac_certificate ${{ secrets.APPLICATION_CERT }} ${{ secrets.APPLICATION_CERT_NAME }}
+        install/mac_certificate ${{ secrets.INSTALLER_CERT }} ${{ secrets.INSTALLER_CERT_NAME }}
+    # - name: build
+    #   run: install/mac_build
+    # - name: test
+    #   run: tests/mac_tests
 
