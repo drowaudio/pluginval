@@ -1,0 +1,22 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: macOS-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: true
+    - name: install certificates
+      run: |
+        install/mac_install_certificate "${{ secrets.APPLICATION_CERT }}" "${{ secrets.APPLICATION_CERT_NAME }}"
+        install/mac_install_certificate "${{ secrets.INSTALLER_CERT }}" "${{ secrets.INSTALLER_CERT_NAME }}"
+    # - name: build
+    #   run: install/mac_build
+    # - name: test
+    #   run: tests/mac_tests
+

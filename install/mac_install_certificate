@@ -1,0 +1,38 @@
+#!/bin/bash -e
+
+CERT_BASE64_STRING=$1
+CERT_FILE_NAME=$2
+
+if [ -z "$CERT_BASE64_STRING" ]; then
+	echo "CERT_BASE64_STRING needed as first arg!"
+	exit 1
+fi
+
+if [ -z "$CERT_FILE_NAME" ]; then
+	echo "CERT_FILE_NAME needed as second arg!"
+	exit 1
+fi
+
+#========================================================================
+# Create the cert file from the base 64 string arg
+CERT_BASE64_FILE="/tmp/$CERT_FILE_NAME"
+rm "$CERT_BASE64_FILE"
+touch "$CERT_BASE64_FILE"
+echo "$CERT_BASE64_STRING" > "$CERT_BASE64_FILE"
+
+#========================================================================
+# Make sure the cert file is cleaned up on exit
+function cleanup
+{
+	echo "Removing CERT_BASE64_FILE: $CERT_BASE64_FILE" 
+  	rm "$CERT_BASE64_FILE"
+}
+
+trap cleanup EXIT
+
+#========================================================================
+# Create a file from the base 64 file 
+openssl base64 -d -in "$CERT_BASE64_FILE" -out "$CERT_FILE_PATH"
+
+# Then import it in to the login keychain
+security import "$CERT_FILE_PATH" -k ~/Library/Keychains/login.keychain
